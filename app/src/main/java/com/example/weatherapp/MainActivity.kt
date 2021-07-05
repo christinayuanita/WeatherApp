@@ -15,6 +15,8 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.network.WeatherService
@@ -95,6 +97,8 @@ class MainActivity : AppCompatActivity() {
             Log.i("Current longitude", "$longitude")
 
             getLocationWeatherDetails(latitude, longitude)
+
+            mFusedLocationClient.removeLocationUpdates(this);
         }
     }
 
@@ -238,5 +242,20 @@ class MainActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("HH:mm", Locale.UK)
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_refresh -> {
+                requestLocationData()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
